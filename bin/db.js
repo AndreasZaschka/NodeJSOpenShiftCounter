@@ -17,7 +17,7 @@ client.connect();
 
 var error_response = "data already exists - bypassing db initialization step\n";
 
-function createDBSchema(err, rows, result) {
+function createDBSchema(err, rows, next) {
     if (err && err.code == "ECONNREFUSED") {
         return console.error("DB connection unavailable, see README notes for setup assistance\n", err);
     }
@@ -34,8 +34,8 @@ function createDBSchema(err, rows, result) {
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
-    pg.on("end", function (row, result) {
-        console.log(result.rows.length + ' rows were received');
+    pg.on("end", function (result) {
+        console.log(result.rows + ' rows were received');
         client.end();
     });
 
@@ -52,8 +52,8 @@ function createDBSchema(err, rows, result) {
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
-    pg.on("end", function (row, result) {
-        console.log(result.rows.length + ' rows were received');
+    pg.on("end", function (result) {
+        console.log(result.rows + ' rows were received');
         client.end();
     });
 
@@ -70,8 +70,8 @@ function createDBSchema(err, rows, result) {
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
-    pg.on("end", function (row, result) {
-        console.log(result.rows.length + ' rows were received');
+    pg.on("end", function (result) {
+        console.log(result.rows + ' rows were received');
         client.end();
     });
 };
