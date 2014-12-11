@@ -36,7 +36,6 @@ function createDBSchema(err, rows, next) {
     });
     pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
-        client.end();
     });
 
     //TABLE COUNTER_DETAILS
@@ -54,7 +53,6 @@ function createDBSchema(err, rows, next) {
     });
     pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
-        client.end();
     });
 
     //TABLE COUNTER_HISTORY
@@ -72,8 +70,9 @@ function createDBSchema(err, rows, next) {
     });
     pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
-        client.end();
     });
+
+    client.end();
 };
 
 function init_db() {
