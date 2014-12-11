@@ -9,7 +9,7 @@ var table_counters = 'COUNTERS',
     table_counter_history = 'COUNTER_HISTORY'
 
 var config = cc({
-    table_name: process.env.TABLE_NAME || process.env.OPENSHIFT_APP_NAME || 'COUNTERS'
+    table_name: process.env.TABLE_NAME || process.env.OPENSHIFT_APP_NAME || 'counter'
 })
 var pg_config = config.get('POSTGRESQL_DB_URL');
 
@@ -57,7 +57,7 @@ function createDBSchema(err, rows, result) {
 };
 
 function init_db() {
-    pg('CREATE EXTENSION postgis;', createDBSchema);
+    pg(createDBSchema);
 }
 
 function flush_db() {
@@ -90,6 +90,32 @@ function select_all(req, res, next) {
         return rows;
     });
 };
+
+function select_one(req, id, next) {
+    console.log('SELECT * FROM ' + table_counter_detail + ' WHERE id =' + id)
+    pg('SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';', function (err, rows, result) {
+        console.log(config);
+        if (err) {
+            res.send(500, {http_status: 500, error_msg: err})
+            return consile.error('error running query', err);
+        }
+        res.send(result);
+        return rows;
+    });
+}
+
+function insert_dummy(req, res, next) {
+    console.log('INSERT dummy data');
+    pg('INSERT INTO ' + table_counters + ' (name, amount) VALUES ("MATE", 37),("IPhone", 1));', function (err, rows, result) {
+        console.log(config);
+        if (err) {
+            res.send(500, {http_status: 500, error_msg: err})
+            return consile.error('error running query', err);
+        }
+        res.send(result);
+        return rows;
+    });
+}
 
 module.exports = exports = {
     selectAll: select_all,
