@@ -93,7 +93,7 @@ function select_all(req, res, next) {
 
 function select_one(req, res, next) {
     var id = req.params.id;
-    console.log('SELECT * FROM ' + table_counter_detail + ' WHERE id =' + id)
+    console.log(pg);
     pg('SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';', function (err, rows, result) {
         console.log(config);
         if (err) {
@@ -106,7 +106,7 @@ function select_one(req, res, next) {
 }
 
 function insert_dummy(req, res, next) {
-    console.log('INSERT dummy data');
+    console.log(pg);
     pg('INSERT INTO ' + table_counters + ' (name, amount) VALUES ("MATE", 37),("IPhone", 1));', function (err, rows, result) {
         console.log(config);
         if (err) {

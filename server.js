@@ -15,6 +15,8 @@ app.use(restify.CORS())
 app.use(restify.fullResponse())
 
 // Routes
+app.get('/init', db.initDB());
+app.get('/rm', db.flushDB());
 app.get('/counters', db.selectAll);
 app.get('/counters/:id', db.selectOne);
 app.get('/insertDummy', db.insertDummy);
