@@ -1,7 +1,7 @@
 {
   "name": "Counter-App",
   "description": "A simple counter app for counting things like mate bottles",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "engines": {
     "node": "0.10.x",

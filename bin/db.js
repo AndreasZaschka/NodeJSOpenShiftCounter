@@ -91,7 +91,8 @@ function select_all(req, res, next) {
     });
 };
 
-function select_one(req, id, next) {
+function select_one(req, res, next) {
+    var id = req.params.id;
     console.log('SELECT * FROM ' + table_counter_detail + ' WHERE id =' + id)
     pg('SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';', function (err, rows, result) {
         console.log(config);
@@ -119,6 +120,8 @@ function insert_dummy(req, res, next) {
 
 module.exports = exports = {
     selectAll: select_all,
+    selectOne: select_one,
+    insertDummy: insert_dummy,
     flushDB: flush_db,
     initDB: init_db
 };

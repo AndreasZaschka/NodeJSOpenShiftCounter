@@ -16,6 +16,8 @@ app.use(restify.fullResponse())
 
 // Routes
 app.get('/counters', db.selectAll);
+app.get('/counters/:id', db.selectOne);
+app.get('/insertDummy', db.insertDummy);
 app.get('/status', function (req, res, next) {
     res.send("{status: 'ok'}");
 });
