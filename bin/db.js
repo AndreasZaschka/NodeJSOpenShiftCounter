@@ -21,17 +21,19 @@ function createDBSchema(err, rows, result) {
     }
 
     // TABLE COUNTERS
+    pg.connectionParameters = pg_config + '/' + table_counters;
+    console.log(pg_config + '/' + table_counters);
     var query = "CREATE TABLE " + table_counters + " (" +
         "id serial NOT NULL, " +
         "name character varying(14) NOT NULL, " +
         "amount integer NOT NULL," +
         "PRIMARY KEY (id)" +
         ");";
-    pg.connectionParameters = pg_config + '/' + table_counters;
-    console.log(pg_config + '/' + table_counters);
     pg(query);
 
     //TABLE COUNTER_DETAILS
+    pg.connectionParameters = pg_config + '/' + table_counter_detail;
+    console.log(pg_config + '/' + table_counter_detail);
     var query = "CREATE TABLE " + table_counter_detail + " (" +
         "id serial NOT NULL REFERENCES " + table_counters + "(id), " +
         "name character varying(14) NOT NULL, " +
@@ -39,11 +41,11 @@ function createDBSchema(err, rows, result) {
         "mod_date timestamp DEFAULT CURRENT_TIMESTAMP," +
         "mod_username character varying(14) DEFAULT 'anonymous'" +
         ");";
-    pg.connectionParameters = pg_config + '/' + table_counter_detail;
-    console.log(pg_config + '/' + table_counter_detail);
     pg(query);
 
     //TABLE COUNTER_HISTORY
+    pg.connectionParameters = pg_config + '/' + table_counter_history;
+    console.log(pg_config + '/' + table_counter_history);
     var query = "CREATE TABLE " + table_counter_history + " (" +
         "id serial NOT NULL REFERENCES " + table_counters + "(id), " +
         "name character varying(14) NOT NULL, " +
@@ -51,8 +53,6 @@ function createDBSchema(err, rows, result) {
         "mod_date timestamp DEFAULT CURRENT_TIMESTAMP," +
         "mod_username character varying(14) DEFAULT 'anonymous'" +
         ");";
-    pg.connectionParameters = pg_config + '/' + table_counter_history;
-    console.log(pg_config + '/' + table_counter_history);
     pg(query);
 };
 
@@ -80,7 +80,7 @@ function flush_db() {
 
 function select_all(req, res, next) {
     console.log(pg);
-    pg('SELECT id,name,amount FROM ' + table_counters + ';', function (err, rows, result) {
+    pg('SELECT * FROM ' + table_counters + ';', function (err, rows, result) {
         console.log(config);
         if (err) {
             res.send(500, {http_status: 500, error_msg: err})
