@@ -35,7 +35,7 @@ function createDBSchema(err, rows, result) {
         result.addRow(row);
     });
     pg.on("end", function (row, result) {
-        console.log(result.rowCount + ' rows were received');
+        console.log(result.rows.length + ' rows were received');
         client.end();
     });
 
@@ -53,7 +53,7 @@ function createDBSchema(err, rows, result) {
         result.addRow(row);
     });
     pg.on("end", function (row, result) {
-        console.log(result.rowCount + ' rows were received');
+        console.log(result.rows.length + ' rows were received');
         client.end();
     });
 
@@ -71,7 +71,7 @@ function createDBSchema(err, rows, result) {
         result.addRow(row);
     });
     pg.on("end", function (row, result) {
-        console.log(result.rowCount + ' rows were received');
+        console.log(result.rows.length + ' rows were received');
         client.end();
     });
 };
