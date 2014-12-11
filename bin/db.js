@@ -8,7 +8,10 @@ var table_counters = 'COUNTERS',
     table_counter_detail = 'COUNTER_DETAILS',
     table_counter_history = 'COUNTER_HISTORY'
 
-var conString = "pg://admin2efblhn:eupljg6eQRSH@$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT/counter";
+var conString = "postgresql://admin2efblhn:eupljg6eQRSH@$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT/counter";
+if (process.env.OPENSHIFT_POSTGRESQL_DB_URL) {
+    conString = process.env.OPENSHIFT_POSTGRESQL_DB_URL + 'counter';
+}
 var client = new pg.Client(conString);
 client.connect();
 
