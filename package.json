@@ -1,0 +1,30 @@
+{
+  "name": "Counter-App",
+  "description": "A simple counter app for counting things like mate bottles",
+  "version": "0.1.0",
+  "private": false,
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
+  "dependencies": {
+    "restify": "^2.8.3",
+    "config-multipaas": "0.1.0",
+    "pg": "^3.6.0",
+    "pg-query": "^0.10.0"
+  },
+  "devDependencies": {
+    "tap": "^0.4.13"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AndreasZaschka/NodeJSOpenShiftCounter.git"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm run initdb",
+    "flushdb": "node bin/flushdb.js",
+    "initdb": "node bin/bootstrap.js"
+  },
+  "main": "server.js"
+}
