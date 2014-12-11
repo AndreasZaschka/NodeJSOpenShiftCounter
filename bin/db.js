@@ -74,7 +74,7 @@ function createDBSchema(err, rows, result) {
 };
 
 function init_db() {
-    pg(createDBSchema);
+    createDBSchema();
 }
 
 function flush_db() {
