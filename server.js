@@ -18,8 +18,6 @@ app.use(restify.fullResponse())
 app.get('/counters', db.selectAll);
 app.get('/counters/:id', db.selectOne);
 app.get('/insertDummy', db.insertDummy);
-app.get('/initData', db.initDB());
-app.get('/rmData', db.flushDB());
 app.get('/status', function (req, res, next) {
     res.send("{status: 'ok'}");
 });
