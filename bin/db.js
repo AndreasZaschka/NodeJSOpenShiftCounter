@@ -41,7 +41,7 @@ function createDBSchema(err, rows, next) {
             console.log(result.rows + ' rows were received');
         });
         q.on("error", function (error) {
-            console.error('ERROR', err);
+            console.error('ERROR', error);
         });
 
         //TABLE COUNTER_DETAILS
@@ -61,7 +61,7 @@ function createDBSchema(err, rows, next) {
             console.log(result.rows + ' rows were received');
         });
         q.on("error", function (error) {
-            console.error('ERROR', err);
+            console.error('ERROR', error);
         });
 
         //TABLE COUNTER_HISTORY
@@ -81,7 +81,7 @@ function createDBSchema(err, rows, next) {
             console.log(result.rows + ' rows were received');
         });
         q.on("error", function (error) {
-            console.error('ERROR', err);
+            console.error('ERROR', error);
         });
 
         client.end();
@@ -113,19 +113,23 @@ function flush_db() {
 function select_all(req, res, next) {
     pg.connect(conString, function (err, client, done) {
         if (err) {
-            console.log('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
             throw err;
         }
         var query = 'SELECT * FROM ' + table_counters + ';';
         console.log(query);
-        var pg = client.query(query);
-        pg.on("row", function (row, result) {
+        var q = client.query(query);
+        q.on("row", function (row, result) {
             result.addRow(row);
         });
-        pg.on("end", function (result) {
+        q.on("end", function (result) {
             console.log(result.rows + ' rows were received');
             res.send(result);
         });
+        q.on("error", function (error) {
+            console.error('ERROR', error);
+        });
+
         client.end();
     });
 };
@@ -133,20 +137,24 @@ function select_all(req, res, next) {
 function select_one(req, res, next) {
     pg.connect(conString, function (err, client, done) {
         if (err) {
-            console.log('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
             throw err;
         }
         var id = req.params.id;
         var query = 'SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';';
         console.log(query);
-        var pg = client.query(query);
-        pg.on("row", function (row, result) {
+        var q = client.query(query);
+        q.on("row", function (row, result) {
             result.addRow(row);
         });
-        pg.on("end", function (result) {
+        q.on("end", function (result) {
             console.log(result.rows + ' rows were received');
             res.send(result);
         });
+        q.on("error", function (error) {
+            console.error('ERROR', error);
+        });
+
         client.end();
     });
 }
@@ -154,20 +162,24 @@ function select_one(req, res, next) {
 function insert_dummy(req, res, next) {
     pg.connect(conString, function (err, client, done) {
         if (err) {
-            console.log('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
             throw err;
         }
         var query = "INSERT INTO ' + table_counters + ' (name, amount) VALUES ('MATE', 37),('IPhone', 1);";
         var query2 = 'INSERT INTO ' + table_counter_detail + ' (id, name, amount, mod_username) VALUES (1, "MATE", 37, "Andreas Zaschka"),(2, "IPhone", 1, "Markus Heider");';
         console.log(query);
-        var pg = client.query(query);
-        pg.on("row", function (row, result) {
+        var q = client.query(query);
+        q.on("row", function (row, result) {
             result.addRow(row);
         });
-        pg.on("end", function (result) {
+        q.on("end", function (result) {
             console.log(result.rows + ' rows were received');
             res.send(result);
         });
+        q.on("error", function (error) {
+            console.error('ERROR', error);
+        });
+
         client.end();
     });
 }
