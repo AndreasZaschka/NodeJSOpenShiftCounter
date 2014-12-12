@@ -71,6 +71,7 @@ function createDBSchema(err, rows, next) {
     pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
     });
+    client.end();
 };
 
 function init_db() {
@@ -106,6 +107,7 @@ function select_all(req, res, next) {
         console.log(result.rows + ' rows were received');
         res.send(result);
     });
+    client.end();
 };
 
 function select_one(req, res, next) {
@@ -120,6 +122,7 @@ function select_one(req, res, next) {
         console.log(result.rows + ' rows were received');
         res.send(result);
     });
+    client.end();
 }
 
 function insert_dummy(req, res, next) {
@@ -134,6 +137,7 @@ function insert_dummy(req, res, next) {
         console.log(result.rows + ' rows were received');
         res.send(result);
     });
+    client.end();
 }
 
 module.exports = exports = {
