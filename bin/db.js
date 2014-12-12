@@ -13,11 +13,11 @@ if (process.env.OPENSHIFT_POSTGRESQL_DB_URL) {
     conString = process.env.OPENSHIFT_POSTGRESQL_DB_URL + '/counter';
 }
 var client = new pg.Client(conString);
-client.connect();
 
 var error_response = "data already exists - bypassing db initialization step\n";
 
 function createDBSchema(err, rows, next) {
+    client.connect();
     if (err && err.code == "ECONNREFUSED") {
         return console.error("DB connection unavailable, see README notes for setup assistance\n", err);
     }
@@ -98,6 +98,7 @@ function flush_db() {
 }
 
 function select_all(req, res, next) {
+    client.connect();
     var query = 'SELECT * FROM ' + table_counters + ';';
     console.log(query);
     var pg = client.query(query);
@@ -112,6 +113,7 @@ function select_all(req, res, next) {
 };
 
 function select_one(req, res, next) {
+    client.connect();
     var id = req.params.id;
     var query = 'SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';';
     console.log(query);
@@ -127,6 +129,7 @@ function select_one(req, res, next) {
 }
 
 function insert_dummy(req, res, next) {
+    client.connect();
     var query = "INSERT INTO ' + table_counters + ' (name, amount) VALUES ('MATE', 37),('IPhone', 1);";
     var query2 = 'INSERT INTO ' + table_counter_detail + ' (id, name, amount, mod_username) VALUES (1, "MATE", 37, "Andreas Zaschka"),(2, "IPhone", 1, "Markus Heider");';
     console.log(query);
