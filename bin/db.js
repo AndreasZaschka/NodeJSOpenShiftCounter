@@ -33,12 +33,15 @@ function createDBSchema(err, rows, next) {
             "PRIMARY KEY (id)" +
             ");";
         console.log(query);
-        var pg = client.query(query);
-        pg.on("row", function (row, result) {
+        var q = client.query(query);
+        q.on("row", function (row, result) {
             result.addRow(row);
         });
-        pg.on("end", function (result) {
+        q.on("end", function (result) {
             console.log(result.rows + ' rows were received');
+        });
+        q.on("error", function (error) {
+            console.error('ERROR: ' + util.inspect(err));
         });
 
         //TABLE COUNTER_DETAILS
@@ -50,12 +53,15 @@ function createDBSchema(err, rows, next) {
             "mod_username character varying(14) DEFAULT 'anonymous'" +
             ");";
         console.log(query);
-        var pg = client.query(query);
-        pg.on("row", function (row, result) {
+        var q = client.query(query);
+        q.on("row", function (row, result) {
             result.addRow(row);
         });
-        pg.on("end", function (result) {
+        q.on("end", function (result) {
             console.log(result.rows + ' rows were received');
+        });
+        q.on("error", function (error) {
+            console.error('ERROR: ' + util.inspect(err));
         });
 
         //TABLE COUNTER_HISTORY
@@ -67,13 +73,17 @@ function createDBSchema(err, rows, next) {
             "mod_username character varying(14) DEFAULT 'anonymous'" +
             ");";
         console.log(query);
-        var pg = client.query(query);
-        pg.on("row", function (row, result) {
+        var q = client.query(query);
+        q.on("row", function (row, result) {
             result.addRow(row);
         });
-        pg.on("end", function (result) {
+        q.on("end", function (result) {
             console.log(result.rows + ' rows were received');
         });
+        q.on("error", function (error) {
+            console.error('ERROR: ' + util.inspect(err));
+        });
+
         client.end();
     });
 };
