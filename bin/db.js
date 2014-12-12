@@ -16,62 +16,66 @@ if (process.env.OPENSHIFT_POSTGRESQL_DB_URL) {
 var error_response = "data already exists - bypassing db initialization step\n";
 
 function createDBSchema(err, rows, next) {
-    var client = new pg.Client(conString);
-    client.connect();
-    if (err && err.code == "ECONNREFUSED") {
-        return console.error("DB connection unavailable, see README notes for setup assistance\n", err);
-    }
+    pg.connect(conString, function (err, client, done) {
+        if (err) {
+            console.log('ERROR: ' + util.inspect(err));
+            throw err;
+        }
+        if (err && err.code == "ECONNREFUSED") {
+            return console.error("DB connection unavailable, see README notes for setup assistance\n", err);
+        }
 
-    // TABLE COUNTERS
-    var query = "CREATE TABLE IF NOT EXISTS " + table_counters + " (" +
-        "id serial NOT NULL, " +
-        "name character varying(14) NOT NULL, " +
-        "amount integer NOT NULL," +
-        "PRIMARY KEY (id)" +
-        ");";
-    console.log(query);
-    var pg = client.query(query);
-    pg.on("row", function (row, result) {
-        result.addRow(row);
-    });
-    pg.on("end", function (result) {
-        console.log(result.rows + ' rows were received');
-    });
+        // TABLE COUNTERS
+        var query = "CREATE TABLE IF NOT EXISTS " + table_counters + " (" +
+            "id serial NOT NULL, " +
+            "name character varying(14) NOT NULL, " +
+            "amount integer NOT NULL," +
+            "PRIMARY KEY (id)" +
+            ");";
+        console.log(query);
+        var pg = client.query(query);
+        pg.on("row", function (row, result) {
+            result.addRow(row);
+        });
+        pg.on("end", function (result) {
+            console.log(result.rows + ' rows were received');
+        });
 
-    //TABLE COUNTER_DETAILS
-    var query = "CREATE TABLE IF NOT EXISTS " + table_counter_detail + " (" +
-        "id serial NOT NULL REFERENCES " + table_counters + "(id), " +
-        "name character varying(14) NOT NULL, " +
-        "amount integer NOT NULL," +
-        "mod_date timestamp DEFAULT CURRENT_TIMESTAMP," +
-        "mod_username character varying(14) DEFAULT 'anonymous'" +
-        ");";
-    console.log(query);
-    var pg = client.query(query);
-    pg.on("row", function (row, result) {
-        result.addRow(row);
-    });
-    pg.on("end", function (result) {
-        console.log(result.rows + ' rows were received');
-    });
+        //TABLE COUNTER_DETAILS
+        var query = "CREATE TABLE IF NOT EXISTS " + table_counter_detail + " (" +
+            "id serial NOT NULL REFERENCES " + table_counters + "(id), " +
+            "name character varying(14) NOT NULL, " +
+            "amount integer NOT NULL," +
+            "mod_date timestamp DEFAULT CURRENT_TIMESTAMP," +
+            "mod_username character varying(14) DEFAULT 'anonymous'" +
+            ");";
+        console.log(query);
+        var pg = client.query(query);
+        pg.on("row", function (row, result) {
+            result.addRow(row);
+        });
+        pg.on("end", function (result) {
+            console.log(result.rows + ' rows were received');
+        });
 
-    //TABLE COUNTER_HISTORY
-    var query = "CREATE TABLE IF NOT EXISTS " + table_counter_history + " (" +
-        "id serial NOT NULL REFERENCES " + table_counters + "(id), " +
-        "name character varying(14) NOT NULL, " +
-        "amount integer NOT NULL," +
-        "mod_date timestamp DEFAULT CURRENT_TIMESTAMP," +
-        "mod_username character varying(14) DEFAULT 'anonymous'" +
-        ");";
-    console.log(query);
-    var pg = client.query(query);
-    pg.on("row", function (row, result) {
-        result.addRow(row);
+        //TABLE COUNTER_HISTORY
+        var query = "CREATE TABLE IF NOT EXISTS " + table_counter_history + " (" +
+            "id serial NOT NULL REFERENCES " + table_counters + "(id), " +
+            "name character varying(14) NOT NULL, " +
+            "amount integer NOT NULL," +
+            "mod_date timestamp DEFAULT CURRENT_TIMESTAMP," +
+            "mod_username character varying(14) DEFAULT 'anonymous'" +
+            ");";
+        console.log(query);
+        var pg = client.query(query);
+        pg.on("row", function (row, result) {
+            result.addRow(row);
+        });
+        pg.on("end", function (result) {
+            console.log(result.rows + ' rows were received');
+        });
+        client.end();
     });
-    pg.on("end", function (result) {
-        console.log(result.rows + ' rows were received');
-    });
-    client.end();
 };
 
 function init_db() {
@@ -97,53 +101,65 @@ function flush_db() {
 }
 
 function select_all(req, res, next) {
-    var client = new pg.Client(conString);
-    client.connect();
-    var query = 'SELECT * FROM ' + table_counters + ';';
-    console.log(query);
-    var pg = client.query(query);
-    pg.on("row", function (row, result) {
-        result.addRow(row);
+    pg.connect(conString, function (err, client, done) {
+        if (err) {
+            console.log('ERROR: ' + util.inspect(err));
+            throw err;
+        }
+        var query = 'SELECT * FROM ' + table_counters + ';';
+        console.log(query);
+        var pg = client.query(query);
+        pg.on("row", function (row, result) {
+            result.addRow(row);
+        });
+        pg.on("end", function (result) {
+            console.log(result.rows + ' rows were received');
+            res.send(result);
+        });
+        client.end();
     });
-    pg.on("end", function (result) {
-        console.log(result.rows + ' rows were received');
-        res.send(result);
-    });
-    client.end();
 };
 
 function select_one(req, res, next) {
-    var client = new pg.Client(conString);
-    client.connect();
-    var id = req.params.id;
-    var query = 'SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';';
-    console.log(query);
-    var pg = client.query(query);
-    pg.on("row", function (row, result) {
-        result.addRow(row);
+    pg.connect(conString, function (err, client, done) {
+        if (err) {
+            console.log('ERROR: ' + util.inspect(err));
+            throw err;
+        }
+        var id = req.params.id;
+        var query = 'SELECT * FROM ' + table_counter_detail + ' WHERE id=' + id + ';';
+        console.log(query);
+        var pg = client.query(query);
+        pg.on("row", function (row, result) {
+            result.addRow(row);
+        });
+        pg.on("end", function (result) {
+            console.log(result.rows + ' rows were received');
+            res.send(result);
+        });
+        client.end();
     });
-    pg.on("end", function (result) {
-        console.log(result.rows + ' rows were received');
-        res.send(result);
-    });
-    client.end();
 }
 
 function insert_dummy(req, res, next) {
-    var client = new pg.Client(conString);
-    client.connect();
-    var query = "INSERT INTO ' + table_counters + ' (name, amount) VALUES ('MATE', 37),('IPhone', 1);";
-    var query2 = 'INSERT INTO ' + table_counter_detail + ' (id, name, amount, mod_username) VALUES (1, "MATE", 37, "Andreas Zaschka"),(2, "IPhone", 1, "Markus Heider");';
-    console.log(query);
-    var pg = client.query(query);
-    pg.on("row", function (row, result) {
-        result.addRow(row);
+    pg.connect(conString, function (err, client, done) {
+        if (err) {
+            console.log('ERROR: ' + util.inspect(err));
+            throw err;
+        }
+        var query = "INSERT INTO ' + table_counters + ' (name, amount) VALUES ('MATE', 37),('IPhone', 1);";
+        var query2 = 'INSERT INTO ' + table_counter_detail + ' (id, name, amount, mod_username) VALUES (1, "MATE", 37, "Andreas Zaschka"),(2, "IPhone", 1, "Markus Heider");';
+        console.log(query);
+        var pg = client.query(query);
+        pg.on("row", function (row, result) {
+            result.addRow(row);
+        });
+        pg.on("end", function (result) {
+            console.log(result.rows + ' rows were received');
+            res.send(result);
+        });
+        client.end();
     });
-    pg.on("end", function (result) {
-        console.log(result.rows + ' rows were received');
-        res.send(result);
-    });
-    client.end();
 }
 
 module.exports = exports = {
