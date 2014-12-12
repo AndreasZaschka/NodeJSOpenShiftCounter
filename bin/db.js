@@ -104,7 +104,7 @@ function select_all(req, res, next) {
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
-    pg.on("end", function (row, result) {
+    pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
         res.send(result);
         client.end();
@@ -119,7 +119,7 @@ function select_one(req, res, next) {
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
-    pg.on("end", function (row, result) {
+    pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
         res.send(result);
         client.end();
@@ -127,14 +127,14 @@ function select_one(req, res, next) {
 }
 
 function insert_dummy(req, res, next) {
-    var query = 'INSERT INTO ' + table_counters + ' (name, amount) VALUES ("MATE", 37),("IPhone", 1);';
+    var query = "INSERT INTO ' + table_counters + ' (name, amount) VALUES ('MATE', 37),('IPhone', 1);";
     var query2 = 'INSERT INTO ' + table_counter_detail + ' (id, name, amount, mod_username) VALUES (1, "MATE", 37, "Andreas Zaschka"),(2, "IPhone", 1, "Markus Heider");';
-    console.log(query + query2);
+    console.log(query);
     var pg = client.query(query);
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
-    pg.on("end", function (row, result) {
+    pg.on("end", function (result) {
         console.log(result.rows + ' rows were received');
         res.send(result);
         client.end();
