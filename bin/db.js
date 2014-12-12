@@ -105,7 +105,7 @@ function select_all(req, res, next) {
         result.addRow(row);
     });
     pg.on("end", function (row, result) {
-        console.log(result.rowCount + ' rows were received');
+        console.log(result.rows + ' rows were received');
         res.send(result);
         client.end();
     });
@@ -120,21 +120,22 @@ function select_one(req, res, next) {
         result.addRow(row);
     });
     pg.on("end", function (row, result) {
-        console.log(result.rowCount + ' rows were received');
+        console.log(result.rows + ' rows were received');
         res.send(result);
         client.end();
     });
 }
 
 function insert_dummy(req, res, next) {
-    var query = 'INSERT INTO ' + table_counters + ' (name, amount) VALUES ("MATE", 37),("IPhone", 1));';
-    console.log(query);
+    var query = 'INSERT INTO ' + table_counters + ' (name, amount) VALUES ("MATE", 37),("IPhone", 1);';
+    var query2 = 'INSERT INTO ' + table_counter_detail + ' (id, name, amount, mod_username) VALUES (1, "MATE", 37, "Andreas Zaschka"),(2, "IPhone", 1, "Markus Heider");';
+    console.log(query + query2);
     var pg = client.query(query);
     pg.on("row", function (row, result) {
         result.addRow(row);
     });
     pg.on("end", function (row, result) {
-        console.log(result.rowCount + ' rows were received');
+        console.log(result.rows + ' rows were received');
         res.send(result);
         client.end();
     });
