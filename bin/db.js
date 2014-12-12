@@ -18,7 +18,7 @@ var error_response = "data already exists - bypassing db initialization step\n";
 function createDBSchema(err, rows, next) {
     pg.connect(conString, function (err, client, done) {
         if (err) {
-            console.log('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
             throw err;
         }
         if (err && err.code == "ECONNREFUSED") {
@@ -41,7 +41,7 @@ function createDBSchema(err, rows, next) {
             console.log(result.rows + ' rows were received');
         });
         q.on("error", function (error) {
-            console.error('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
         });
 
         //TABLE COUNTER_DETAILS
@@ -61,7 +61,7 @@ function createDBSchema(err, rows, next) {
             console.log(result.rows + ' rows were received');
         });
         q.on("error", function (error) {
-            console.error('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
         });
 
         //TABLE COUNTER_HISTORY
@@ -81,7 +81,7 @@ function createDBSchema(err, rows, next) {
             console.log(result.rows + ' rows were received');
         });
         q.on("error", function (error) {
-            console.error('ERROR: ' + util.inspect(err));
+            console.error('ERROR', err);
         });
 
         client.end();
